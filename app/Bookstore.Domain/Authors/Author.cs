@@ -8,52 +8,52 @@ using System.Threading.Tasks;
 
 namespace Bookstore.Domain.Authors
 {
-    [Table("authors", Schema = "public")]
+    [Table("Author", Schema = "dbo")]
     public class Author
     {
         [Key]
-        [Column("business_entity_id")]
+        [Column("BusinessEntityID")]
         public int BusinessEntityID { get; set; }
 
         [Required]
         [StringLength(15)]
-        [Column("national_id_number")]
+        [Column("NationalIDNumber")]
         public string NationalIDNumber { get; set; }
 
         [Required]
         [StringLength(256)]
-        [Column("login_id")]
+        [Column("LoginID")]
         public string LoginID { get; set; }
 
         [Required]
         [StringLength(50)]
-        [Column("job_title")]
+        [Column("JobTitle")]
         public string JobTitle { get; set; }
 
         [Required]
-        [Column("birth_date")]
+        [Column("BirthDate")]
         public DateTime BirthDate { get; set; }
 
         [Required]
         [StringLength(1)]
-        [Column("marital_status")]
+        [Column("MaritalStatus")]
         public string MaritalStatus { get; set; }
 
         [Required]
         [StringLength(1)]
-        [Column("gender")]
+        [Column("Gender")]
         public string Gender { get; set; }
 
         [Required]
-        [Column("hire_date")]
+        [Column("HireDate")]
         public DateTime HireDate { get; set; }
 
         [Required]
-        [Column("vacation_hours")]
+        [Column("VacationHours")]
         public short VacationHours { get; set; }
         
         [Required]
-        [Column("modified_date")]
+        [Column("ModifiedDate")]
         public DateTime ModifiedDate { get; set; }
     }
 }

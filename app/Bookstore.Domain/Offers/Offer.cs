@@ -4,7 +4,7 @@ using Bookstore.Domain.ReferenceData;
 
 namespace Bookstore.Domain.Offers
 {
-    [Table("offer", Schema = "dbo")]
+    [Table("offers", Schema = "public")]
     public class Offer : Entity
     {
         public Offer(
@@ -35,42 +35,42 @@ namespace Bookstore.Domain.Offers
         [Column("isbn")]
         public string ISBN { get; set; }
 
-        [Column("bookname")]
+        [Column("book_name")]
         public string BookName { get; set; }
 
-        [Column("fronturl")]
+        [Column("front_url")]
         public string? FrontUrl { get; set; }
 
         public ReferenceDataItem Genre { get; set; }
-        [Column("genreid")]
+        [Column("genre_id")]
         public int GenreId { get; set; }
 
         public ReferenceDataItem Condition { get; set; }
-        [Column("conditionid")]
+        [Column("condition_id")]
         public int ConditionId { get; set; }
 
         public ReferenceDataItem Publisher { get; set; }
-        [Column("publisherid")]
+        [Column("publisher_id")]
         public int PublisherId { get; set; }
 
         public ReferenceDataItem BookType { get; set; }
-        [Column("booktypeid")]
+        [Column("book_type_id")]
         public int BookTypeId { get; set; }
 
         [Column("summary")]
         public string? Summary { get; set; }
 
-        [Column("offerstatus")]
+        [Column("offer_status")]
         public OfferStatus OfferStatus { get; set; } = OfferStatus.PendingApproval;
 
         [Column("comment")]
         public string? Comment { get; set; }
 
         public Customer Customer { get; set; }
-        [Column("customerid")]
+        [Column("customer_id")]
         public int CustomerId { get; set; }
 
-        [Column("bookprice")]
+        [Column("book_price")]
         public decimal BookPrice { get; set; }
     }
 }
