@@ -1,4 +1,4 @@
-using Amazon.Rekognition;
+﻿using Amazon.Rekognition;
 using Amazon.S3;
 using Amazon.SecretsManager.Model;
 using Amazon.SecretsManager;
@@ -13,7 +13,6 @@ using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Npgsql;
-using Microsoft.Data.SqlClient;
 
 
 namespace Bookstore.Web.Startup
@@ -33,9 +32,9 @@ namespace Bookstore.Web.Startup
             builder.Services.AddAWSService<IAmazonRekognition>();
 
             var connString = GetDatabaseConnectionString(builder.Configuration);
-            builder.Services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(connString));
+            builder.Services.AddDbContext<ApplicationDbContext>(option => option.UseNpgsql(connString));
             builder.Services.AddSession();
-
+ 
             return builder;
         }
 
@@ -90,11 +89,11 @@ namespace Bookstore.Web.Startup
                     PropertyNameCaseInsensitive = true
                 });
 
-                var partialConnString = $"Server={dbSecrets.Host},{dbSecrets.Port}; Initial Catalog=BobsUsedBookStore;MultipleActiveResultSets=true; Integrated Security=false;TrustServerCertificate=True\r\n";
+                var partialConnString = $"Host={dbSecrets.Host};Port={dbSecrets.Port};Database=postgres";
 
-                var builder = new SqlConnectionStringBuilder(partialConnString)
+                var builder = new NpgsqlConnectionStringBuilder(partialConnString)
                 {
-                    UserID = dbSecrets.Username,
+                    Username = dbSecrets.Username,
                     Password = dbSecrets.Password
                 };
 

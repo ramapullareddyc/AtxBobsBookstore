@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using Bookstore.Domain.Addresses;
 using Bookstore.Domain.Books;
@@ -33,13 +35,13 @@ namespace Bookstore.Domain.Orders
         [Column("orderstatus")]
         public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
 
-        [Column("tax")]
+        [NotMapped]
         public decimal Tax => SubTotal * 0.1m;
 
-        [Column("subtotal")]
+        [NotMapped]
         public decimal SubTotal => OrderItems.Sum(x => x.Book.Price);
 
-        [Column("total")]
+        [NotMapped]
         public decimal Total => SubTotal + Tax;
 
         public void AddOrderItem(Book book, int quantity)
