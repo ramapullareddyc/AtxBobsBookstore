@@ -1,10 +1,8 @@
-﻿using Bookstore.Domain.Addresses;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
+using Bookstore.Domain.Addresses;
 using Bookstore.Domain.Books;
 using Bookstore.Domain.Customers;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 
 namespace Bookstore.Domain.Orders
 {
