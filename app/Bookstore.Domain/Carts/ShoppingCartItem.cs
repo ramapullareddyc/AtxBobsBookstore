@@ -1,5 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using Bookstore.Domain.Books;
+﻿using Bookstore.Domain.Books;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Bookstore.Domain.Carts
 {
