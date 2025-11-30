@@ -26,14 +26,14 @@ namespace Bookstore.Web.Controllers
         {
             return View(await FindAllProducts());
         }
-        
+
         public async Task<List<Product>> FindAllProducts()
         {
             try
             {
-                string sql = @"EXEC [dbo].[uspGetProductData];";
+                FormattableString sql = $"SELECT * FROM bobsusedbookstore_dbo.uspgetproductdata();";
 
-                return await _context.Database.SqlQueryRaw<Product>(sql).ToListAsync();
+                return await _context.Database.SqlQuery<Product>(sql).ToListAsync();
             }
             catch (Exception ex)
             {

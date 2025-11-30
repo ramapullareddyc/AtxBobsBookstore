@@ -1,4 +1,4 @@
-﻿using Amazon.Rekognition;
+using Amazon.Rekognition;
 using Amazon.S3;
 using Amazon.SecretsManager.Model;
 using Amazon.SecretsManager;
@@ -13,7 +13,6 @@ using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Npgsql;
-using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 
 namespace Bookstore.Web.Startup
@@ -35,7 +34,7 @@ namespace Bookstore.Web.Startup
             var connString = GetDatabaseConnectionString(builder.Configuration);
             builder.Services.AddDbContext<ApplicationDbContext>(option => option.UseNpgsql(connString));
             builder.Services.AddSession();
- 
+
             return builder;
         }
 
@@ -60,7 +59,7 @@ namespace Bookstore.Web.Startup
 
             try
             {
-                var dbSecretId = configuration[DbSecretsParameterName];
+                var dbSecretId = "arn:aws:secretsmanager:us-east-1:358648860783:secret:atx-db-modernization-chennuru-DBConnector-setup-bobsBookStoreDB-source-target-RKXQ5y";
                 Console.WriteLine($"Reading db credentials from secret {dbSecretId}");
 
                 // Read the db secrets posted into Secrets Manager by the CDK. The secret provides the host,
@@ -90,13 +89,14 @@ namespace Bookstore.Web.Startup
                     PropertyNameCaseInsensitive = true
                 });
 
-                var partialConnString = $"Host={dbSecrets.Host};Port={dbSecrets.Port};Database=postgres;Integrated Security=false";
-
-                var builder = new NpgsqlConnectionStringBuilder(partialConnString)
+                var builder = new NpgsqlConnectionStringBuilder
                 {
+                    Host = dbSecrets.Host,
+                    Database = "postgres",
                     Username = dbSecrets.Username,
                     Password = dbSecrets.Password
                 };
+                builder.Port = Convert.ToInt32(dbSecrets.Port);
 
                 connString = builder.ConnectionString;
             }
