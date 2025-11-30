@@ -21,10 +21,12 @@ namespace Bookstore.Domain.Orders
 
         [Column("customer_id")]
         public int CustomerId { get; set; }
+        
         public Customer Customer { get; set; }
 
         [Column("address_id")]
         public int AddressId { get; set; }
+        
         public Address Address { get; set; }
 
         public IEnumerable<OrderItem> OrderItems => orderItems;
