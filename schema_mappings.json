@@ -1,0 +1,75 @@
+﻿{
+  "database_mapping": {
+    "source_database": "BobsBookstore",
+    "target_database": "bobsbookstore",
+    "target_schema": "dbo"
+  },
+  "table_mappings": [
+    {
+      "source_schema": "dbo",
+      "source_table": "Author",
+      "target_schema": "dbo",
+      "target_table": "author"
+    },
+    {
+      "source_schema": "dbo",
+      "source_table": "Product",
+      "target_schema": "dbo",
+      "target_table": "product"
+    },
+    {
+      "source_schema": "dbo",
+      "source_table": "Address",
+      "target_schema": "dbo",
+      "target_table": "address"
+    },
+    {
+      "source_schema": "dbo",
+      "source_table": "Book",
+      "target_schema": "dbo",
+      "target_table": "book"
+    },
+    {
+      "source_schema": "dbo",
+      "source_table": "Customer",
+      "target_schema": "dbo",
+      "target_table": "customer"
+    },
+    {
+      "source_schema": "dbo",
+      "source_table": "Order",
+      "target_schema": "dbo",
+      "target_table": "order"
+    },
+    {
+      "source_schema": "dbo",
+      "source_table": "ShoppingCart",
+      "target_schema": "dbo",
+      "target_table": "shoppingcart"
+    },
+    {
+      "source_schema": "dbo",
+      "source_table": "ShoppingCartItem",
+      "target_schema": "dbo",
+      "target_table": "shoppingcartitem"
+    },
+    {
+      "source_schema": "dbo",
+      "source_table": "OrderItem",
+      "target_schema": "dbo",
+      "target_table": "orderitem"
+    },
+    {
+      "source_schema": "dbo",
+      "source_table": "Offer",
+      "target_schema": "dbo",
+      "target_table": "offer"
+    },
+    {
+      "source_schema": "dbo",
+      "source_table": "ReferenceData",
+      "target_schema": "dbo",
+      "target_table": "referencedata"
+    }
+  ]
+}
