@@ -1,5 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Bookstore.Domain.Carts
 {

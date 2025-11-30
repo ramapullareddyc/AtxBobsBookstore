@@ -13,6 +13,7 @@ using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Npgsql;
+using Microsoft.Data.SqlClient;
 
 
 namespace Bookstore.Web.Startup
@@ -32,7 +33,7 @@ namespace Bookstore.Web.Startup
             builder.Services.AddAWSService<IAmazonRekognition>();
 
             var connString = GetDatabaseConnectionString(builder.Configuration);
-            builder.Services.AddDbContext<ApplicationDbContext>(option => option.UseNpgsql(connString));
+            builder.Services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(connString));
             builder.Services.AddSession();
 
             return builder;
@@ -59,7 +60,7 @@ namespace Bookstore.Web.Startup
 
             try
             {
-                var dbSecretId = "arn:aws:secretsmanager:us-east-1:358648860783:secret:atx-db-modernization-chennuru-DBConnector-setup-bobsBookStoreDB-source-target-RKXQ5y";
+                var dbSecretId = configuration[DbSecretsParameterName];
                 Console.WriteLine($"Reading db credentials from secret {dbSecretId}");
 
                 // Read the db secrets posted into Secrets Manager by the CDK. The secret provides the host,
@@ -89,14 +90,13 @@ namespace Bookstore.Web.Startup
                     PropertyNameCaseInsensitive = true
                 });
 
-                var builder = new NpgsqlConnectionStringBuilder
+                var partialConnString = $"Server={dbSecrets.Host},{dbSecrets.Port}; Initial Catalog=BobsUsedBookStore;MultipleActiveResultSets=true; Integrated Security=false;TrustServerCertificate=True\r\n";
+
+                var builder = new SqlConnectionStringBuilder(partialConnString)
                 {
-                    Host = dbSecrets.Host,
-                    Database = "postgres",
-                    Username = dbSecrets.Username,
+                    UserID = dbSecrets.Username,
                     Password = dbSecrets.Password
                 };
-                builder.Port = Convert.ToInt32(dbSecrets.Port);
 
                 connString = builder.ConnectionString;
             }

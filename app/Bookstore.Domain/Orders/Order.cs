@@ -28,15 +28,18 @@ namespace Bookstore.Domain.Orders
         public IEnumerable<OrderItem> OrderItems => orderItems;
 
         [Column("deliverydate")]
-        public DateTime DeliveryDate { get; set; } = DateTime.Now.AddDays(7);
+        public DateTime DeliveryDate { get; set; } = DateTime.UtcNow.AddDays(7);
 
         [Column("orderstatus")]
         public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
 
+        [Column("tax")]
         public decimal Tax => SubTotal * 0.1m;
 
+        [Column("subtotal")]
         public decimal SubTotal => OrderItems.Sum(x => x.Book.Price);
 
+        [Column("total")]
         public decimal Total => SubTotal + Tax;
 
         public void AddOrderItem(Book book, int quantity)
