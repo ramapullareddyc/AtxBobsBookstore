@@ -3,24 +3,24 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Bookstore.Domain.Products;
 
-[Table("product", Schema = "public")]
+[Table("Product", Schema = "dbo")]
 public class Product
 {
     [Key]
-    [Column("product_id")]
+    [Column("ProductID")]
     public int ProductID { get; set; }
 
     [Required]
     [StringLength(15)]
-    [Column("name")]
+    [Column("Name")]
     public string Name { get; set; }
 
     [Required]
     [StringLength(256)]
-    [Column("product_number")]
+    [Column("ProductNumber")]
     public string ProductNumber { get; set; }
 
     [Required]
-    [Column("safety_stock_level")]
+    [Column("SafetyStockLevel")]
     public int SafetyStockLevel { get; set; }
 }
