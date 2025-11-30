@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,7 +31,7 @@ namespace Bookstore.Web.Controllers
         {
             try
             {
-                string sql = @"SELECT * FROM bobsusedbookstore_dbo.uspgetproductdata()";
+                string sql = @"EXEC [dbo].[uspGetProductData];";
 
                 return await _context.Database.SqlQueryRaw<Product>(sql).ToListAsync();
             }
