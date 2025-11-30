@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using Bookstore.Domain.Customers;
 using Bookstore.Domain.ReferenceData;
@@ -42,21 +42,25 @@ namespace Bookstore.Domain.Offers
         [Column("front_url")]
         public string? FrontUrl { get; set; }
 
+        // Navigation property - no [Column] attribute
         public ReferenceDataItem Genre { get; set; }
         
         [Column("genre_id")]
         public int GenreId { get; set; }
 
+        // Navigation property - no [Column] attribute
         public ReferenceDataItem Condition { get; set; }
         
         [Column("condition_id")]
         public int ConditionId { get; set; }
 
+        // Navigation property - no [Column] attribute
         public ReferenceDataItem Publisher { get; set; }
         
         [Column("publisher_id")]
         public int PublisherId { get; set; }
 
+        // Navigation property - no [Column] attribute
         public ReferenceDataItem BookType { get; set; }
         
         [Column("book_type_id")]
@@ -71,6 +75,7 @@ namespace Bookstore.Domain.Offers
         [Column("comment")]
         public string? Comment { get; set; }
 
+        // Navigation property - no [Column] attribute
         public Customer Customer { get; set; }
         
         [Column("customer_id")]

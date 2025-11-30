@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using Bookstore.Domain.ReferenceData;
 
 namespace Bookstore.Domain.Books
@@ -48,19 +49,27 @@ namespace Bookstore.Domain.Books
         [Column("isbn")]
         public string ISBN { get; set; }
 
+        // Navigation property - no [Column] attribute
         public ReferenceDataItem Publisher { get; set; }
+        
         [Column("publisher_id")]
         public int PublisherId { get; set; }
 
+        // Navigation property - no [Column] attribute
         public ReferenceDataItem BookType { get; set; }
+        
         [Column("book_type_id")]
         public int BookTypeId { get; set; }
 
+        // Navigation property - no [Column] attribute
         public ReferenceDataItem Genre { get; set; }
+        
         [Column("genre_id")]
         public int GenreId { get; set; }
 
+        // Navigation property - no [Column] attribute
         public ReferenceDataItem Condition { get; set; }
+        
         [Column("condition_id")]
         public int ConditionId { get; set; }
 
@@ -76,6 +85,7 @@ namespace Bookstore.Domain.Books
         [Column("quantity")]
         public int Quantity { get; set; }
 
+        // Computed properties - no [Column] attribute
         public bool IsInStock => Quantity > 0;
 
         public bool IsLowInStock => Quantity <= LowBookThreshold;

@@ -8,7 +8,6 @@ using Bookstore.Domain.Orders;
 using Bookstore.Domain.Products;
 using Bookstore.Domain.ReferenceData;
 using Microsoft.EntityFrameworkCore;
-using Npgsql.EntityFrameworkCore.PostgreSQL;
 using System;
 
 namespace Bookstore.Data
@@ -49,12 +48,68 @@ namespace Bookstore.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Boolean property conversions for PostgreSQL compatibility
-            modelBuilder.Entity<Address>().Property(e => e.IsActive).HasConversion<int>();
-            modelBuilder.Entity<ShoppingCartItem>().Property(e => e.WantToBuy).HasConversion<int>();
+            // Configure table mappings with schema
+            modelBuilder.Entity<Address>(entity =>
+            {
+                entity.ToTable("Address", "dbo");
+                entity.Property(e => e.IsActive).HasConversion<int>();
+            });
 
-            modelBuilder.Entity<Customer>().HasIndex(x => x.Sub).IsUnique();
+            modelBuilder.Entity<Book>(entity =>
+            {
+                entity.ToTable("Book", "dbo");
+                entity.Property(e => e.IsInStock).HasConversion<int>();
+                entity.Property(e => e.IsLowInStock).HasConversion<int>();
+            });
 
+            modelBuilder.Entity<Customer>(entity =>
+            {
+                entity.ToTable("Customer", "dbo");
+                entity.HasIndex(x => x.Sub).IsUnique();
+            });
+
+            modelBuilder.Entity<Order>(entity =>
+            {
+                entity.ToTable("Order", "dbo");
+            });
+
+            modelBuilder.Entity<ShoppingCart>(entity =>
+            {
+                entity.ToTable("ShoppingCart", "dbo");
+            });
+
+            modelBuilder.Entity<ShoppingCartItem>(entity =>
+            {
+                entity.ToTable("ShoppingCartItem", "dbo");
+                entity.Property(e => e.WantToBuy).HasConversion<int>();
+            });
+
+            modelBuilder.Entity<OrderItem>(entity =>
+            {
+                entity.ToTable("OrderItem", "dbo");
+            });
+
+            modelBuilder.Entity<Offer>(entity =>
+            {
+                entity.ToTable("Offer", "dbo");
+            });
+
+            modelBuilder.Entity<Author>(entity =>
+            {
+                entity.ToTable("Author", "dbo");
+            });
+
+            modelBuilder.Entity<Product>(entity =>
+            {
+                entity.ToTable("Product", "dbo");
+            });
+
+            modelBuilder.Entity<ReferenceDataItem>(entity =>
+            {
+                entity.ToTable("ReferenceData", "dbo");
+            });
+
+            // Configure relationships
             modelBuilder.Entity<Book>().HasOne(x => x.Publisher).WithMany().HasForeignKey(x => x.PublisherId).OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Book>().HasOne(x => x.BookType).WithMany().HasForeignKey(x => x.BookTypeId).OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Book>().HasOne(x => x.Genre).WithMany().HasForeignKey(x => x.GenreId).OnDelete(DeleteBehavior.Restrict);
