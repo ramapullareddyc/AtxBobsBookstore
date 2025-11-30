@@ -16,6 +16,9 @@ namespace Bookstore.Data
     {
         static ApplicationDbContext()
         {
+            // Enable legacy timestamp behavior for PostgreSQL compatibility
+            // This allows DateTime values to be written to timestamp without time zone columns
+            // without strict Kind checking, maintaining compatibility with MS SQL Server behavior
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         }
 
@@ -48,77 +51,28 @@ namespace Bookstore.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Configure table and column mappings for Address entity
-            modelBuilder.Entity<Address>(entity =>
-            {
-                entity.ToTable("Address", "dbo");
-                entity.Property(e => e.IsActive).HasConversion<int>();
-            });
+            // Configure table mappings for PostgreSQL
+            modelBuilder.Entity<Address>().ToTable("Address", "dbo");
+            modelBuilder.Entity<Book>().ToTable("Book", "dbo");
+            modelBuilder.Entity<Customer>().ToTable("Customer", "dbo");
+            modelBuilder.Entity<Order>().ToTable("Order", "dbo");
+            modelBuilder.Entity<ShoppingCart>().ToTable("ShoppingCart", "dbo");
+            modelBuilder.Entity<ShoppingCartItem>().ToTable("ShoppingCartItem", "dbo");
+            modelBuilder.Entity<OrderItem>().ToTable("OrderItem", "dbo");
+            modelBuilder.Entity<Offer>().ToTable("Offer", "dbo");
+            modelBuilder.Entity<Author>().ToTable("Author", "dbo");
+            modelBuilder.Entity<Product>().ToTable("Product", "dbo");
+            modelBuilder.Entity<ReferenceDataItem>().ToTable("ReferenceData", "dbo");
 
-            // Configure table and column mappings for Book entity
-            modelBuilder.Entity<Book>(entity =>
-            {
-                entity.ToTable("Book", "dbo");
-                entity.Property(e => e.IsInStock).HasConversion<int>();
-                entity.Property(e => e.IsLowInStock).HasConversion<int>();
-            });
+            // Configure boolean to integer conversions for PostgreSQL compatibility
+            // PostgreSQL uses NUMERIC(1,0) for bit columns from SQL Server
+            modelBuilder.Entity<Address>().Property(e => e.IsActive).HasConversion<int>();
+            modelBuilder.Entity<ShoppingCartItem>().Property(e => e.WantToBuy).HasConversion<int>();
 
-            // Configure table and column mappings for Customer entity
-            modelBuilder.Entity<Customer>(entity =>
-            {
-                entity.ToTable("Customer", "dbo");
-                entity.HasIndex(x => x.Sub).IsUnique();
-            });
+            // Configure indexes
+            modelBuilder.Entity<Customer>().HasIndex(x => x.Sub).IsUnique();
 
-            // Configure table and column mappings for Order entity
-            modelBuilder.Entity<Order>(entity =>
-            {
-                entity.ToTable("Order", "dbo");
-            });
-
-            // Configure table and column mappings for ShoppingCart entity
-            modelBuilder.Entity<ShoppingCart>(entity =>
-            {
-                entity.ToTable("ShoppingCart", "dbo");
-            });
-
-            // Configure table and column mappings for ShoppingCartItem entity
-            modelBuilder.Entity<ShoppingCartItem>(entity =>
-            {
-                entity.ToTable("ShoppingCartItem", "dbo");
-                entity.Property(e => e.WantToBuy).HasConversion<int>();
-            });
-
-            // Configure table and column mappings for OrderItem entity
-            modelBuilder.Entity<OrderItem>(entity =>
-            {
-                entity.ToTable("OrderItem", "dbo");
-            });
-
-            // Configure table and column mappings for Offer entity
-            modelBuilder.Entity<Offer>(entity =>
-            {
-                entity.ToTable("Offer", "dbo");
-            });
-
-            // Configure table and column mappings for Author entity
-            modelBuilder.Entity<Author>(entity =>
-            {
-                entity.ToTable("Author", "dbo");
-            });
-
-            // Configure table and column mappings for Product entity
-            modelBuilder.Entity<Product>(entity =>
-            {
-                entity.ToTable("Product", "dbo");
-            });
-
-            // Configure table and column mappings for ReferenceDataItem entity
-            modelBuilder.Entity<ReferenceDataItem>(entity =>
-            {
-                entity.ToTable("ReferenceData", "dbo");
-            });
-
+            // Configure relationships
             modelBuilder.Entity<Book>().HasOne(x => x.Publisher).WithMany().HasForeignKey(x => x.PublisherId).OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Book>().HasOne(x => x.BookType).WithMany().HasForeignKey(x => x.BookTypeId).OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Book>().HasOne(x => x.Genre).WithMany().HasForeignKey(x => x.GenreId).OnDelete(DeleteBehavior.Restrict);
