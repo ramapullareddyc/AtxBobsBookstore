@@ -6,16 +6,17 @@ namespace Bookstore.Domain
 {
     public abstract class Entity
     {
-        [Column("id")]
+        [Key]
+        [Column("Id")]
         public int Id { get; set; }
 
-        [Column("createdby")]
+        [Column("CreatedBy")]
         public string CreatedBy { get; set; } = "System";
 
-        [Column("createdon")]
+        [Column("CreatedOn")]
         public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
 
-        [Column("updatedon")]
+        [Column("UpdatedOn")]
         public DateTime UpdatedOn { get; set; } = DateTime.UtcNow;
 
         //[Timestamp]

@@ -60,6 +60,11 @@ namespace Bookstore.Web.Startup
             try
             {
                 var dbSecretId = configuration[DbSecretsParameterName];
+                // For PostgreSQL migration, using target secret if available
+                if (string.IsNullOrEmpty(dbSecretId))
+                {
+                    dbSecretId = "arn:aws:secretsmanager:us-east-1:358648860783:secret:atx-db-modernization-chennuru-DBConnector-setup-bobsBookStoreDB-source-target-RKXQ5y";
+                }
                 Console.WriteLine($"Reading db credentials from secret {dbSecretId}");
 
                 // Read the db secrets posted into Secrets Manager by the CDK. The secret provides the host,
@@ -89,11 +94,10 @@ namespace Bookstore.Web.Startup
                     PropertyNameCaseInsensitive = true
                 });
 
-                var builder = new NpgsqlConnectionStringBuilder
+                var partialConnString = $"Host={dbSecrets.Host};Port={dbSecrets.Port};Database=postgres";
+
+                var builder = new NpgsqlConnectionStringBuilder(partialConnString)
                 {
-                    Host = dbSecrets.Host,
-                    Port = dbSecrets.Port,
-                    Database = "postgres",
                     Username = dbSecrets.Username,
                     Password = dbSecrets.Password
                 };

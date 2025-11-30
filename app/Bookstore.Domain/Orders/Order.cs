@@ -1,13 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 using Bookstore.Domain.Addresses;
 using Bookstore.Domain.Books;
 using Bookstore.Domain.Customers;
 
 namespace Bookstore.Domain.Orders
 {
-    [Table("Order", Schema = "bobsusedbookstore_dbo")]
+    [Table("Order", Schema = "dbo")]
     public class Order : Entity
     {
         public Order(int customerId, int addressId)
@@ -18,20 +17,20 @@ namespace Bookstore.Domain.Orders
 
         private readonly List<OrderItem> orderItems = new List<OrderItem>();
 
-        [Column("customerid")]
+        [Column("CustomerId")]
         public int CustomerId { get; set; }
         public Customer Customer { get; set; }
 
-        [Column("addressid")]
+        [Column("AddressId")]
         public int AddressId { get; set; }
         public Address Address { get; set; }
 
         public IEnumerable<OrderItem> OrderItems => orderItems;
 
-        [Column("deliverydate")]
+        [Column("DeliveryDate")]
         public DateTime DeliveryDate { get; set; } = DateTime.UtcNow.AddDays(7);
 
-        [Column("orderstatus")]
+        [Column("OrderStatus")]
         public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
 
         public decimal Tax => SubTotal * 0.1m;
