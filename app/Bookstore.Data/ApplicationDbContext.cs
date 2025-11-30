@@ -1,4 +1,5 @@
-﻿using Bookstore.Domain.Addresses;
+﻿using System;
+using Bookstore.Domain.Addresses;
 using Bookstore.Domain.Authors;
 using Bookstore.Domain.Books;
 using Bookstore.Domain.Carts;
@@ -9,7 +10,6 @@ using Bookstore.Domain.Products;
 using Bookstore.Domain.ReferenceData;
 using Microsoft.EntityFrameworkCore;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
-using System;
 
 namespace Bookstore.Data
 {
@@ -49,7 +49,7 @@ namespace Bookstore.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Apply table and column mappings for all entities
+            // Apply table and column mappings for PostgreSQL schema
             modelBuilder.Entity<Address>(entity =>
             {
                 entity.ToTable("address", "bobsusedbookstore_dbo");
@@ -87,7 +87,6 @@ namespace Bookstore.Data
                 entity.Property(e => e.CreatedOn).HasColumnName("createdon");
                 entity.Property(e => e.UpdatedOn).HasColumnName("updatedon");
                 
-                // Preserve existing relationships
                 entity.HasOne(x => x.Publisher).WithMany().HasForeignKey(x => x.PublisherId).OnDelete(DeleteBehavior.Restrict);
                 entity.HasOne(x => x.BookType).WithMany().HasForeignKey(x => x.BookTypeId).OnDelete(DeleteBehavior.Restrict);
                 entity.HasOne(x => x.Genre).WithMany().HasForeignKey(x => x.GenreId).OnDelete(DeleteBehavior.Restrict);
@@ -101,7 +100,7 @@ namespace Bookstore.Data
                 entity.Property(e => e.Username).HasColumnName("username");
                 entity.Property(e => e.FirstName).HasColumnName("firstname");
                 entity.Property(e => e.LastName).HasColumnName("lastname");
-                entity.Property(e => e.FullName).HasColumnName("fullname");
+                entity.Ignore(e => e.FullName); // Computed property - not mapped to database
                 entity.Property(e => e.Email).HasColumnName("email");
                 entity.Property(e => e.DateOfBirth).HasColumnName("dateofbirth");
                 entity.Property(e => e.Phone).HasColumnName("phone");
@@ -110,7 +109,6 @@ namespace Bookstore.Data
                 entity.Property(e => e.CreatedOn).HasColumnName("createdon");
                 entity.Property(e => e.UpdatedOn).HasColumnName("updatedon");
                 
-                // Preserve existing index
                 entity.HasIndex(x => x.Sub).IsUnique();
             });
 
@@ -121,15 +119,14 @@ namespace Bookstore.Data
                 entity.Property(e => e.AddressId).HasColumnName("addressid");
                 entity.Property(e => e.DeliveryDate).HasColumnName("deliverydate");
                 entity.Property(e => e.OrderStatus).HasColumnName("orderstatus");
-                entity.Property(e => e.Tax).HasColumnName("tax");
-                entity.Property(e => e.SubTotal).HasColumnName("subtotal");
-                entity.Property(e => e.Total).HasColumnName("total");
+                entity.Ignore(e => e.Tax); // Computed property - not mapped to database
+                entity.Ignore(e => e.SubTotal); // Computed property - not mapped to database
+                entity.Ignore(e => e.Total); // Computed property - not mapped to database
                 entity.Property(e => e.Id).HasColumnName("id");
                 entity.Property(e => e.CreatedBy).HasColumnName("createdby");
                 entity.Property(e => e.CreatedOn).HasColumnName("createdon");
                 entity.Property(e => e.UpdatedOn).HasColumnName("updatedon");
                 
-                // Preserve existing relationship
                 entity.HasOne(x => x.Customer).WithMany().OnDelete(DeleteBehavior.Restrict);
             });
 
@@ -189,7 +186,6 @@ namespace Bookstore.Data
                 entity.Property(e => e.CreatedOn).HasColumnName("createdon");
                 entity.Property(e => e.UpdatedOn).HasColumnName("updatedon");
                 
-                // Preserve existing relationships
                 entity.HasOne(x => x.Publisher).WithMany().HasForeignKey(x => x.PublisherId).OnDelete(DeleteBehavior.Restrict);
                 entity.HasOne(x => x.BookType).WithMany().HasForeignKey(x => x.BookTypeId).OnDelete(DeleteBehavior.Restrict);
                 entity.HasOne(x => x.Genre).WithMany().HasForeignKey(x => x.GenreId).OnDelete(DeleteBehavior.Restrict);
