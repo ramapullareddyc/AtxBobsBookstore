@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Bookstore.Domain.Products;
 
-[Table("Product", Schema = "public")]
+[Table("Product", Schema = "dbo")]
 public class Product
 {
     [Key]
