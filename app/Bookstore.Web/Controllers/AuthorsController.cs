@@ -160,14 +160,14 @@ namespace Bookstore.Web.Controllers
         {
             try
             {
-                string sql = @"SELECT public.uspupdateauthorpersonalinfo($1, $2, $3, $4, $5)";
+                string sql = @"DECLARE @rowsAffected INT;EXEC @rowsAffected = [dbo].[uspUpdateAuthorPersonalInfo] @BusinessEntityID, @NationalIDNumber, @BirthDate, @MaritalStatus, @Gender;SELECT @rowsAffected;";
 
                 var rowsAffected = await _context.Database.ExecuteSqlRawAsync(sql,
-                    new NpgsqlParameter { Value = businessEntityId },
-                    new NpgsqlParameter { Value = nationalIdNumber },
-                    new NpgsqlParameter { Value = birthDate.ToUniversalTime() },
-                    new NpgsqlParameter { Value = maritalStatus },
-                    new NpgsqlParameter { Value = gender }
+                    new NpgsqlParameter("@BusinessEntityID", businessEntityId),
+                    new NpgsqlParameter("@NationalIDNumber", nationalIdNumber),
+                    new NpgsqlParameter("@BirthDate", birthDate.ToUniversalTime()),
+                    new NpgsqlParameter("@MaritalStatus", maritalStatus),
+                    new NpgsqlParameter("@Gender", gender)
                     );
 
                 return rowsAffected > 0;
@@ -184,7 +184,7 @@ namespace Bookstore.Web.Controllers
             try
             {
                 // Build the SQL command
-                string sql = @"SELECT * FROM public.author";
+                string sql = @"SELECT * FROM Author";
 
                 // Execute the SQL command and get the number of rows affected
                 var results = await _context.Database.SqlQueryRaw<Author>(sql).ToListAsync();
@@ -205,10 +205,10 @@ namespace Bookstore.Web.Controllers
             try
             {
                 // Build the SQL command
-                string sql = @"SELECT public.uspdeleteauthor($1)";
+                string sql = @"DECLARE @rowsAffected INT;EXEC @rowsAffected = [dbo].[uspDeleteAuthor] @BusinessEntityID;SELECT @rowsAffected;";
 
                 // Execute the SQL command and get the number of rows affected
-                var rowsAffected = await _context.Database.ExecuteSqlRawAsync(sql, new NpgsqlParameter { Value = businessEntityId });
+                var rowsAffected = await _context.Database.ExecuteSqlRawAsync(sql, new NpgsqlParameter("@BusinessEntityID", businessEntityId));
 
                 return rowsAffected > 0;
             }
@@ -225,10 +225,10 @@ namespace Bookstore.Web.Controllers
             try
             {
                 // Build the SQL command
-                string sql = @"SELECT ""BusinessEntityID"", TO_CHAR(""ModifiedDate"", 'YYYY-MM-DD HH24:MI:SS') AS ""FormattedModifiedDate"", EXTRACT(YEAR FROM AGE(CURRENT_TIMESTAMP, ""BirthDate"")) AS ""Age"" FROM public.author WHERE EXTRACT(YEAR FROM ""HireDate"") = $1";
+                string sql = @"SELECT BusinessEntityID, FORMAT(ModifiedDate, 'yyyy-MM-dd HH:mm:ss') AS FormattedModifiedDate, DATEDIFF(YEAR, BirthDate, GETDATE()) AS Age FROM Author WHERE DATEPART(YEAR, HireDate) = @HireDate;";
 
                 // Execute the SQL command and get the number of rows affected
-                var results = await _context.Database.SqlQueryRaw<AuthorAgeResult>(sql, new NpgsqlParameter { Value = hireYear }).ToListAsync();
+                var results = await _context.Database.SqlQueryRaw<AuthorAgeResult>(sql, new NpgsqlParameter("@HireDate", hireYear)).ToListAsync();
 
                 return results;
             }

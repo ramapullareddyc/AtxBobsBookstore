@@ -1,4 +1,4 @@
-using Amazon.Rekognition;
+﻿using Amazon.Rekognition;
 using Amazon.S3;
 using Amazon.SecretsManager.Model;
 using Amazon.SecretsManager;
@@ -34,7 +34,7 @@ namespace Bookstore.Web.Startup
             var connString = GetDatabaseConnectionString(builder.Configuration);
             builder.Services.AddDbContext<ApplicationDbContext>(option => option.UseNpgsql(connString));
             builder.Services.AddSession();
-
+ 
             return builder;
         }
 
@@ -63,7 +63,7 @@ namespace Bookstore.Web.Startup
                 Console.WriteLine($"Reading db credentials from secret {dbSecretId}");
 
                 // Read the db secrets posted into Secrets Manager by the CDK. The secret provides the host,
-                // port, userid, and password, which we format into the final connection string for SQL Server.
+                // port, userid, and password, which we format into the final connection string for PostgreSQL.
                 // For this code to work locally, appsettings.json must contain an AWS object with profile and
                 // region info. When deployed to an EC2 instance, credentials and region will be inferred from
                 // the instance profile applied to the instance.
@@ -89,7 +89,16 @@ namespace Bookstore.Web.Startup
                     PropertyNameCaseInsensitive = true
                 });
 
-                connString = $"Host={dbSecrets.Host};Port={dbSecrets.Port};Database=postgres;Username={dbSecrets.Username};Password={dbSecrets.Password}";
+                var builder = new NpgsqlConnectionStringBuilder
+                {
+                    Host = dbSecrets.Host,
+                    Port = dbSecrets.Port,
+                    Database = "postgres",
+                    Username = dbSecrets.Username,
+                    Password = dbSecrets.Password
+                };
+
+                connString = builder.ConnectionString;
             }
             catch (AmazonSecretsManagerException e)
             {
