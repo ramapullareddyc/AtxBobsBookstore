@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,7 +31,9 @@ namespace Bookstore.Web.Controllers
         {
             try
             {
-                string sql = @"EXEC [dbo].[uspGetProductData];";
+                // Stored procedure call - converted to PostgreSQL function call
+                // Note: uspGetProductData needs to be migrated to PostgreSQL as a function
+                string sql = @"SELECT * FROM dbo.uspgetproductdata();";
 
                 return await _context.Database.SqlQueryRaw<Product>(sql).ToListAsync();
             }
