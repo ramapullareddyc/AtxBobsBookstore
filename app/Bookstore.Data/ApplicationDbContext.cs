@@ -1,5 +1,4 @@
-using System;
-using Bookstore.Domain.Addresses;
+﻿using Bookstore.Domain.Addresses;
 using Bookstore.Domain.Authors;
 using Bookstore.Domain.Books;
 using Bookstore.Domain.Carts;
@@ -10,6 +9,7 @@ using Bookstore.Domain.Products;
 using Bookstore.Domain.ReferenceData;
 using Microsoft.EntityFrameworkCore;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
+using System;
 
 namespace Bookstore.Data
 {
@@ -41,7 +41,7 @@ namespace Bookstore.Data
         public DbSet<Offer> Offer { get; set; }
 
         public DbSet<Author> Author { get; set; }
-
+        
         public DbSet<Product> Product { get; set; }
 
 
@@ -49,7 +49,7 @@ namespace Bookstore.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Apply Fluent API schema mappings for all entities
+            // Schema mappings for Address entity
             modelBuilder.Entity<Address>(entity =>
             {
                 entity.ToTable("address", "bobsusedbookstore_dbo");
@@ -67,6 +67,7 @@ namespace Bookstore.Data
                 entity.Property(e => e.UpdatedOn).HasColumnName("updatedon");
             });
 
+            // Schema mappings for Book entity
             modelBuilder.Entity<Book>(entity =>
             {
                 entity.ToTable("book", "bobsusedbookstore_dbo");
@@ -86,13 +87,15 @@ namespace Bookstore.Data
                 entity.Property(e => e.CreatedBy).HasColumnName("createdby");
                 entity.Property(e => e.CreatedOn).HasColumnName("createdon");
                 entity.Property(e => e.UpdatedOn).HasColumnName("updatedon");
-
+                
+                // Preserve existing relationships
                 entity.HasOne(x => x.Publisher).WithMany().HasForeignKey(x => x.PublisherId).OnDelete(DeleteBehavior.Restrict);
                 entity.HasOne(x => x.BookType).WithMany().HasForeignKey(x => x.BookTypeId).OnDelete(DeleteBehavior.Restrict);
                 entity.HasOne(x => x.Genre).WithMany().HasForeignKey(x => x.GenreId).OnDelete(DeleteBehavior.Restrict);
                 entity.HasOne(x => x.Condition).WithMany().HasForeignKey(x => x.ConditionId).OnDelete(DeleteBehavior.Restrict);
             });
 
+            // Schema mappings for Customer entity
             modelBuilder.Entity<Customer>(entity =>
             {
                 entity.ToTable("customer", "bobsusedbookstore_dbo");
@@ -108,10 +111,12 @@ namespace Bookstore.Data
                 entity.Property(e => e.CreatedBy).HasColumnName("createdby");
                 entity.Property(e => e.CreatedOn).HasColumnName("createdon");
                 entity.Property(e => e.UpdatedOn).HasColumnName("updatedon");
-
+                
+                // Preserve existing index
                 entity.HasIndex(x => x.Sub).IsUnique();
             });
 
+            // Schema mappings for Order entity
             modelBuilder.Entity<Order>(entity =>
             {
                 entity.ToTable("Order", "bobsusedbookstore_dbo");
@@ -126,10 +131,12 @@ namespace Bookstore.Data
                 entity.Property(e => e.CreatedBy).HasColumnName("createdby");
                 entity.Property(e => e.CreatedOn).HasColumnName("createdon");
                 entity.Property(e => e.UpdatedOn).HasColumnName("updatedon");
-
+                
+                // Preserve existing relationship
                 entity.HasOne(x => x.Customer).WithMany().OnDelete(DeleteBehavior.Restrict);
             });
 
+            // Schema mappings for ShoppingCart entity
             modelBuilder.Entity<ShoppingCart>(entity =>
             {
                 entity.ToTable("shoppingcart", "bobsusedbookstore_dbo");
@@ -140,6 +147,7 @@ namespace Bookstore.Data
                 entity.Property(e => e.UpdatedOn).HasColumnName("updatedon");
             });
 
+            // Schema mappings for ShoppingCartItem entity
             modelBuilder.Entity<ShoppingCartItem>(entity =>
             {
                 entity.ToTable("shoppingcartitem", "bobsusedbookstore_dbo");
@@ -153,6 +161,7 @@ namespace Bookstore.Data
                 entity.Property(e => e.UpdatedOn).HasColumnName("updatedon");
             });
 
+            // Schema mappings for OrderItem entity
             modelBuilder.Entity<OrderItem>(entity =>
             {
                 entity.ToTable("orderitem", "bobsusedbookstore_dbo");
@@ -165,6 +174,7 @@ namespace Bookstore.Data
                 entity.Property(e => e.UpdatedOn).HasColumnName("updatedon");
             });
 
+            // Schema mappings for Offer entity
             modelBuilder.Entity<Offer>(entity =>
             {
                 entity.ToTable("offer", "bobsusedbookstore_dbo");
@@ -185,13 +195,15 @@ namespace Bookstore.Data
                 entity.Property(e => e.CreatedBy).HasColumnName("createdby");
                 entity.Property(e => e.CreatedOn).HasColumnName("createdon");
                 entity.Property(e => e.UpdatedOn).HasColumnName("updatedon");
-
+                
+                // Preserve existing relationships
                 entity.HasOne(x => x.Publisher).WithMany().HasForeignKey(x => x.PublisherId).OnDelete(DeleteBehavior.Restrict);
                 entity.HasOne(x => x.BookType).WithMany().HasForeignKey(x => x.BookTypeId).OnDelete(DeleteBehavior.Restrict);
                 entity.HasOne(x => x.Genre).WithMany().HasForeignKey(x => x.GenreId).OnDelete(DeleteBehavior.Restrict);
                 entity.HasOne(x => x.Condition).WithMany().HasForeignKey(x => x.ConditionId).OnDelete(DeleteBehavior.Restrict);
             });
 
+            // Schema mappings for Author entity
             modelBuilder.Entity<Author>(entity =>
             {
                 entity.ToTable("author", "bobsusedbookstore_dbo");
@@ -207,6 +219,7 @@ namespace Bookstore.Data
                 entity.Property(e => e.ModifiedDate).HasColumnName("modifieddate");
             });
 
+            // Schema mappings for Product entity
             modelBuilder.Entity<Product>(entity =>
             {
                 entity.ToTable("product", "bobsusedbookstore_dbo");
@@ -216,6 +229,7 @@ namespace Bookstore.Data
                 entity.Property(e => e.SafetyStockLevel).HasColumnName("safetystocklevel");
             });
 
+            // Schema mappings for ReferenceDataItem entity
             modelBuilder.Entity<ReferenceDataItem>(entity =>
             {
                 entity.ToTable("referencedata", "bobsusedbookstore_dbo");
