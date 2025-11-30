@@ -49,18 +49,22 @@ namespace Bookstore.Domain.Books
         public string ISBN { get; set; }
 
         public ReferenceDataItem Publisher { get; set; }
+        
         [Column("publisher_id")]
         public int PublisherId { get; set; }
 
         public ReferenceDataItem BookType { get; set; }
+        
         [Column("book_type_id")]
         public int BookTypeId { get; set; }
 
         public ReferenceDataItem Genre { get; set; }
+        
         [Column("genre_id")]
         public int GenreId { get; set; }
 
         public ReferenceDataItem Condition { get; set; }
+        
         [Column("condition_id")]
         public int ConditionId { get; set; }
 
@@ -76,8 +80,10 @@ namespace Bookstore.Domain.Books
         [Column("quantity")]
         public int Quantity { get; set; }
 
+        [NotMapped]
         public bool IsInStock => Quantity > 0;
 
+        [NotMapped]
         public bool IsLowInStock => Quantity <= LowBookThreshold;
 
         public void ReduceStockLevel(int quantity)
