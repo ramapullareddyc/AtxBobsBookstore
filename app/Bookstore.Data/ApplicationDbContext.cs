@@ -8,11 +8,18 @@ using Bookstore.Domain.Orders;
 using Bookstore.Domain.Products;
 using Bookstore.Domain.ReferenceData;
 using Microsoft.EntityFrameworkCore;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
+using System;
 
 namespace Bookstore.Data
 {
     public partial class ApplicationDbContext : DbContext
     {
+        static ApplicationDbContext()
+        {
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+        }
+
         public ApplicationDbContext() { }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
@@ -42,6 +49,10 @@ namespace Bookstore.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Boolean property conversions for PostgreSQL compatibility
+            modelBuilder.Entity<Address>().Property(e => e.IsActive).HasConversion<int>();
+            modelBuilder.Entity<ShoppingCartItem>().Property(e => e.WantToBuy).HasConversion<int>();
+
             modelBuilder.Entity<Customer>().HasIndex(x => x.Sub).IsUnique();
 
             modelBuilder.Entity<Book>().HasOne(x => x.Publisher).WithMany().HasForeignKey(x => x.PublisherId).OnDelete(DeleteBehavior.Restrict);
