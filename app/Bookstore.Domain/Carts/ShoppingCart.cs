@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
@@ -50,7 +51,7 @@ namespace Bookstore.Domain.Carts
 
         public void RemoveShoppingCartItemById(int shoppingCartItemId)
         {
-            var shoppingCartItem = ShoppingCartItems.Single(x => x.Id == shoppingCartItemId);
+        var shoppingCartItem = ShoppingCartItems.Single(x => x.Id == shoppingCartItemId);
 
             ShoppingCartItems.Remove(shoppingCartItem);
         }
