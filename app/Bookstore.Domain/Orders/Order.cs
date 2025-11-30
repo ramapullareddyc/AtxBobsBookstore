@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using Bookstore.Domain.Addresses;
@@ -28,6 +27,7 @@ namespace Bookstore.Domain.Orders
         public int AddressId { get; set; }
         public Address Address { get; set; }
 
+        [NotMapped]
         public IEnumerable<OrderItem> OrderItems => orderItems;
 
         [Column("DeliveryDate")]
@@ -36,13 +36,13 @@ namespace Bookstore.Domain.Orders
         [Column("OrderStatus")]
         public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
 
-        [Column("Tax")]
+        [NotMapped]
         public decimal Tax => SubTotal * 0.1m;
 
-        [Column("SubTotal")]
+        [NotMapped]
         public decimal SubTotal => OrderItems.Sum(x => x.Book.Price);
 
-        [Column("Total")]
+        [NotMapped]
         public decimal Total => SubTotal + Tax;
 
         public void AddOrderItem(Book book, int quantity)

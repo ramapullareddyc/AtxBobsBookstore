@@ -1,4 +1,4 @@
-﻿using Amazon.Rekognition;
+using Amazon.Rekognition;
 using Amazon.S3;
 using Amazon.SecretsManager.Model;
 using Amazon.SecretsManager;
@@ -34,7 +34,7 @@ namespace Bookstore.Web.Startup
             var connString = GetDatabaseConnectionString(builder.Configuration);
             builder.Services.AddDbContext<ApplicationDbContext>(option => option.UseNpgsql(connString));
             builder.Services.AddSession();
- 
+
             return builder;
         }
 
@@ -89,15 +89,7 @@ namespace Bookstore.Web.Startup
                     PropertyNameCaseInsensitive = true
                 });
 
-                var partialConnString = $"Host={dbSecrets.Host};Port={dbSecrets.Port};Database=postgres";
-
-                var builder = new NpgsqlConnectionStringBuilder(partialConnString)
-                {
-                    Username = dbSecrets.Username,
-                    Password = dbSecrets.Password
-                };
-
-                connString = builder.ConnectionString;
+                connString = $"Host={dbSecrets.Host};Port={dbSecrets.Port};Database=postgres;Username={dbSecrets.Username};Password={dbSecrets.Password}";
             }
             catch (AmazonSecretsManagerException e)
             {
